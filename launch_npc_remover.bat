@@ -27,3 +27,6 @@ echo "Dependencies installed."
 echo "Launching the app..."
 rem Run the script to launch the app.
 venv\Scripts\python.exe src\main.py
+
+rem Pause to give time to read any error messages.
+pause
