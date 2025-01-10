@@ -13,10 +13,10 @@ if __name__ == '__main__':
     RES_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
     if ID_JSON_FILE_PATH.exists():
         with open(ID_JSON_FILE_PATH, 'r') as f:
-            id_dict = json.load(f)
+            id_json = json.load(f)
     else:
         print("Could not find the file containing the IDs. Re-download the mod if you have accidentally deleted it.", file=sys.stderr)
         exit(1)
 
     # Create the main window
-    Gui.start_gui(id_dict)
+    Gui.start_gui(id_json)
