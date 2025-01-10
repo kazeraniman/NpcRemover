@@ -1,11 +1,13 @@
 import os.path
 import re
 import sys
-import typing
+import webbrowser
+import urllib.parse
 
 from PyQt6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QLabel, QListWidget, QLineEdit, QWidget, \
     QHBoxLayout, QPushButton, QFileDialog, QAbstractItemView, QListWidgetItem
 
+WIKI_URL = 'https://eldenring.wiki.gg/wiki/Special:Search?{0}&go=Go&ns0=1'
 
 class Gui(QMainWindow):
     def __init__(self, id_json: dict):
@@ -14,7 +16,7 @@ class Gui(QMainWindow):
         self.id_json = id_json
 
         self.setWindowTitle("NPC Remover")
-        self.setMinimumSize(700, 500)
+        self.setMinimumSize(750, 500)
 
         main_widget = QWidget()
         main_layout = QVBoxLayout()
@@ -141,6 +143,13 @@ class NpcItem(QWidget):
 
         tag_text = QLabel(', '.join(self.tags))
         layout.addWidget(tag_text, stretch=4)
+
+        info_button = QPushButton("Info")
+        info_button.clicked.connect(self.info_button_clicked)
+        layout.addWidget(info_button, stretch=1)
+
+    def info_button_clicked(self):
+        webbrowser.open(WIKI_URL.format(urllib.parse.urlencode({'search': self.name})))
 
 class NpcListItem(QListWidgetItem):
     def __init__(self, npc_item: NpcItem, parent: QListWidget = None):
