@@ -1,10 +1,12 @@
 import os
 import re
 import sys
+from pathlib import Path
 
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, QPushButton, QListWidget, \
-    QAbstractItemView, QFileDialog, QListWidgetItem, QApplication
+    QAbstractItemView, QFileDialog, QListWidgetItem, QApplication, QMessageBox
 
+from src.config import Config
 from src.gui.npc_list_item import NpcListItem
 from src.gui.npc_item import NpcItem
 
@@ -19,6 +21,9 @@ AVAILABLE_NPC_LABEL_TEXT = 'Available NPCs'
 
 MOD_FOLDER_SELECT_START_DIRECTORY = '~'
 MOD_FOLDER_SELECT_TITLE_TEXT = 'Select Mod Engine 2 Mod Folder'
+MOD_FOLDER_REQUIRED_NAME = 'mod'
+MOD_FOLDER_REQUIRED_NAME_TITLE = 'Must Select Mod Folder'
+MOD_FOLDER_REQUIRED_NAME_BODY = 'The folder you chose is not called "mod". You must select the "mod" folder from Mod Engine 2.'
 
 LIST_KEY = 'list'
 
@@ -26,10 +31,11 @@ DEFAULT_ROW = -1
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, id_json: dict):
+    def __init__(self, id_json: dict, config: Config):
         super().__init__()
 
         self.id_json = id_json
+        self.config = config
 
         self.setWindowTitle(WINDOW_TITLE_TEXT)
         self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
@@ -44,8 +50,8 @@ class MainWindow(QMainWindow):
         folder_select_layout = QHBoxLayout()
         main_layout.addLayout(folder_select_layout)
 
-        self.mod_engine_folder_text = QLineEdit()
-        self.mod_engine_folder_text.setReadOnly(True)
+        self.mod_engine_folder_text = QLineEdit(self.config.get_mod_folder())
+        self.mod_engine_folder_text.setDisabled(True)
         folder_select_layout.addWidget(self.mod_engine_folder_text)
 
         self.mod_engine_button = QPushButton(BROWSE_BUTTON_TEXT)
@@ -90,6 +96,11 @@ class MainWindow(QMainWindow):
         if not folder:
             return
 
+        if Path(folder).name != MOD_FOLDER_REQUIRED_NAME:
+            self.show_message_box(MOD_FOLDER_REQUIRED_NAME_TITLE, MOD_FOLDER_REQUIRED_NAME_BODY)
+            return
+
+        self.config.set_mod_folder(folder)
         self.mod_engine_folder_text.setText(folder)
 
     @staticmethod
@@ -128,9 +139,17 @@ class MainWindow(QMainWindow):
     def set_available_character_hidden(self, item: QListWidgetItem):
         item.setHidden(not re.search(self.search_box.text(), self.available_list_box.itemWidget(item).name, re.IGNORECASE))
 
+    def show_message_box(self, title: str, body: str, buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Ok, default_button: QMessageBox.StandardButton = QMessageBox.StandardButton.Ok) -> QMessageBox.StandardButton:
+        message_box = QMessageBox(self)
+        message_box.setWindowTitle(title)
+        message_box.setText(body)
+        message_box.setStandardButtons(buttons)
+        message_box.setDefaultButton(default_button)
+        return message_box.exec()
+
     @staticmethod
-    def start(id_dict: dict):
+    def start(id_dict: dict, config: Config):
         app = QApplication(sys.argv)
-        window = MainWindow(id_dict)
+        window = MainWindow(id_dict, config)
         window.show()
         app.exec()
