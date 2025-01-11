@@ -1,29 +1,45 @@
-import os.path
+import os
 import re
 import sys
-import webbrowser
-import urllib.parse
 
-from PyQt6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QLabel, QListWidget, QLineEdit, QWidget, \
-    QHBoxLayout, QPushButton, QFileDialog, QAbstractItemView, QListWidgetItem
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, QPushButton, QListWidget, \
+    QAbstractItemView, QFileDialog, QListWidgetItem, QApplication
 
-WIKI_URL = 'https://eldenring.wiki.gg/wiki/Special:Search?{0}&go=Go&ns0=1'
+from src.gui.npc_list_item import NpcListItem
+from src.gui.npc_item import NpcItem
 
-class Gui(QMainWindow):
+MIN_WINDOW_WIDTH = 750
+MIN_WINDOW_HEIGHT = 500
+
+WINDOW_TITLE_TEXT = 'NPC Remover'
+FOLDER_LABEL_TEXT = 'Mod Engine 2 Mod Folder'
+BROWSE_BUTTON_TEXT = 'Browse'
+REPLACED_NPC_LABEL_TEXT = 'Replaced NPCs'
+AVAILABLE_NPC_LABEL_TEXT = 'Available NPCs'
+
+MOD_FOLDER_SELECT_START_DIRECTORY = '~'
+MOD_FOLDER_SELECT_TITLE_TEXT = 'Select Mod Engine 2 Mod Folder'
+
+LIST_KEY = 'list'
+
+DEFAULT_ROW = -1
+
+
+class MainWindow(QMainWindow):
     def __init__(self, id_json: dict):
         super().__init__()
 
         self.id_json = id_json
 
-        self.setWindowTitle("NPC Remover")
-        self.setMinimumSize(750, 500)
+        self.setWindowTitle(WINDOW_TITLE_TEXT)
+        self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
 
         main_widget = QWidget()
         main_layout = QVBoxLayout()
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
 
-        main_layout.addWidget(QLabel("Mod Engine 2 Mod Folder"))
+        main_layout.addWidget(QLabel(FOLDER_LABEL_TEXT))
 
         folder_select_layout = QHBoxLayout()
         main_layout.addLayout(folder_select_layout)
@@ -32,17 +48,17 @@ class Gui(QMainWindow):
         self.mod_engine_folder_text.setReadOnly(True)
         folder_select_layout.addWidget(self.mod_engine_folder_text)
 
-        self.mod_engine_button = QPushButton("Browse")
+        self.mod_engine_button = QPushButton(BROWSE_BUTTON_TEXT)
         self.mod_engine_button.clicked.connect(self.mod_engine_button_clicked)
         folder_select_layout.addWidget(self.mod_engine_button)
 
-        main_layout.addWidget(QLabel("Replaced NPCs"))
+        main_layout.addWidget(QLabel(REPLACED_NPC_LABEL_TEXT))
 
         self.replaced_list_box = QListWidget()
         self.replaced_list_box.itemSelectionChanged.connect(self.replaced_list_selected)
         main_layout.addWidget(self.replaced_list_box)
 
-        main_layout.addWidget(QLabel("Available NPCs"))
+        main_layout.addWidget(QLabel(AVAILABLE_NPC_LABEL_TEXT))
 
         self.search_box = QLineEdit()
         self.search_box.textChanged.connect(self.search_box_changed)
@@ -53,13 +69,13 @@ class Gui(QMainWindow):
         self.available_list_box.itemSelectionChanged.connect(self.available_list_selected)
         main_layout.addWidget(self.available_list_box)
 
-        for npc in id_json['list']:
+        for npc in id_json[LIST_KEY]:
             self.add_row_item(self.available_list_box, npc)
 
         self.available_list_box.sortItems()
 
     @staticmethod
-    def add_row_item(list_widget: QListWidget, npc: dict) -> 'NpcListItem':
+    def add_row_item(list_widget: QListWidget, npc: dict) -> NpcListItem:
         npc_item = NpcItem(npc)
         list_item = NpcListItem(npc_item, list_widget)
         list_item.setSizeHint(npc_item.sizeHint())
@@ -69,8 +85,8 @@ class Gui(QMainWindow):
 
     def mod_engine_button_clicked(self):
         starting_folder = self.mod_engine_folder_text.text() if self.mod_engine_folder_text.text() else os.path.expanduser(
-            '~')
-        folder = QFileDialog.getExistingDirectory(self, "Select Mod Engine 2 Mod Folder", directory=starting_folder)
+            MOD_FOLDER_SELECT_START_DIRECTORY)
+        folder = QFileDialog.getExistingDirectory(self, MOD_FOLDER_SELECT_TITLE_TEXT, directory=starting_folder)
         if not folder:
             return
 
@@ -81,7 +97,7 @@ class Gui(QMainWindow):
         current_row = from_list.currentRow()
         from_list.setCurrentRow(-1)
         selected_item = from_list.takeItem(current_row)
-        new_item = Gui.add_row_item(to_list, selected_item.npc_item.npc_dict)
+        new_item = MainWindow.add_row_item(to_list, selected_item.npc_item.npc_dict)
 
         to_list.sortItems()
         from_list.sortItems()
@@ -89,14 +105,14 @@ class Gui(QMainWindow):
         return new_item
 
     def available_list_selected(self):
-        if self.available_list_box.currentRow() == -1:
+        if self.available_list_box.currentRow() == DEFAULT_ROW:
             return
 
         swapped_item = self.swap_list(self.available_list_box, self.replaced_list_box)
         swapped_item.setHidden(False)
 
     def replaced_list_selected(self):
-        if self.replaced_list_box.currentRow() == -1:
+        if self.replaced_list_box.currentRow() == DEFAULT_ROW:
             return
 
         swapped_item = self.swap_list(self.replaced_list_box, self.available_list_box)
@@ -113,57 +129,8 @@ class Gui(QMainWindow):
         item.setHidden(not re.search(self.search_box.text(), self.available_list_box.itemWidget(item).name, re.IGNORECASE))
 
     @staticmethod
-    def start_gui(id_dict: dict):
+    def start(id_dict: dict):
         app = QApplication(sys.argv)
-        window = Gui(id_dict)
+        window = MainWindow(id_dict)
         window.show()
         app.exec()
-
-class NpcItem(QWidget):
-    def __init__(self, npc_dict: dict):
-        super().__init__()
-
-        self.npc_dict = npc_dict
-        self.name = npc_dict['name']
-        self.id = npc_dict['id']
-        self.tags = npc_dict['tags']
-
-        self.display_name = npc_dict['name']
-        if 'sote' in self.tags:
-            self.display_name += ' (DLC)'
-
-        layout = QHBoxLayout()
-        self.setLayout(layout)
-
-        name_text = QLabel(self.display_name)
-        layout.addWidget(name_text, stretch=4)
-
-        id_text = QLabel(self.id)
-        layout.addWidget(id_text, stretch=1)
-
-        tag_text = QLabel(', '.join(self.tags))
-        layout.addWidget(tag_text, stretch=4)
-
-        info_button = QPushButton("Info")
-        info_button.clicked.connect(self.info_button_clicked)
-        layout.addWidget(info_button, stretch=1)
-
-    def info_button_clicked(self):
-        webbrowser.open(WIKI_URL.format(urllib.parse.urlencode({'search': self.name})))
-
-class NpcListItem(QListWidgetItem):
-    def __init__(self, npc_item: NpcItem, parent: QListWidget = None):
-        super().__init__(parent)
-        self.npc_item = npc_item
-
-    def __lt__(self, other: 'NpcListItem'):
-        if self.npc_item.name != other.npc_item.name:
-            return self.npc_item.name < other.npc_item.name
-
-        self_is_dlc = 'sote' in self.npc_item.tags
-        other_is_dlc = 'sote' in other.npc_item.tags
-
-        if self_is_dlc != other_is_dlc:
-            return not self_is_dlc
-
-        return self.npc_item.id < other.npc_item.id
