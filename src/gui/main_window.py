@@ -4,15 +4,16 @@ import sys
 from pathlib import Path
 
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, QPushButton, QListWidget, \
-    QAbstractItemView, QFileDialog, QListWidgetItem, QApplication, QMessageBox
+    QAbstractItemView, QFileDialog, QListWidgetItem, QApplication, QMessageBox, QStyle
 
 from src.config import Config
-from src.gui.npc_list_item import NpcListItem
 from src.gui.npc_item import NpcItem
+from src.gui.npc_list_item import NpcListItem
 from src.util import copy_files, CopyFileResult, clear_files
 
 MIN_WINDOW_WIDTH = 800
 MIN_WINDOW_HEIGHT = 600
+BUTTON_WIDTH = 150
 
 WINDOW_TITLE_TEXT = 'NPC Remover'
 FOLDER_LABEL_TEXT = 'Mod Engine 2 Mod Folder'
@@ -55,6 +56,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(WINDOW_TITLE_TEXT)
         self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+        self.setWindowIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TrashIcon))
 
         main_widget = QWidget()
         main_layout = QVBoxLayout()
@@ -80,9 +82,12 @@ class MainWindow(QMainWindow):
         self.replaced_list_box.itemSelectionChanged.connect(self.replaced_list_selected)
         main_layout.addWidget(self.replaced_list_box)
 
+        clear_selection_layout = QHBoxLayout()
+        main_layout.addLayout(clear_selection_layout)
         clear_selection_button = QPushButton(CLEAR_BUTTON_TEXT)
         clear_selection_button.clicked.connect(self.clear_button_clicked)
-        main_layout.addWidget(clear_selection_button)
+        clear_selection_button.setFixedWidth(BUTTON_WIDTH)
+        clear_selection_layout.addWidget(clear_selection_button)
 
         main_layout.addWidget(QLabel(AVAILABLE_NPC_LABEL_TEXT))
 
@@ -105,10 +110,12 @@ class MainWindow(QMainWindow):
 
         delete_button = QPushButton(DELETE_BUTTON_TEXT)
         delete_button.clicked.connect(self.delete_button_clicked)
+        delete_button.setFixedWidth(BUTTON_WIDTH)
         bottom_action_button_layout.addWidget(delete_button)
 
         copy_button = QPushButton(COPY_BUTTON_TEXT)
         copy_button.clicked.connect(self.copy_button_clicked)
+        copy_button.setFixedWidth(BUTTON_WIDTH)
         bottom_action_button_layout.addWidget(copy_button)
 
     @staticmethod
@@ -176,6 +183,7 @@ class MainWindow(QMainWindow):
         message_box.setText(body)
         message_box.setStandardButtons(buttons)
         message_box.setDefaultButton(default_button)
+        message_box.setWindowIcon(message_box.style().standardIcon(QStyle.StandardPixmap.SP_TrashIcon))
         return message_box.exec()
 
     def copy_button_clicked(self):
