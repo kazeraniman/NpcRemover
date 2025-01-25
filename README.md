@@ -20,7 +20,8 @@ The [original mod](https://www.nexusmods.com/eldenring/mods/4392) worked by repl
 4. If you accidentally added an NPC, click its row in the `Replaced NPCs` list to un-select it. You may also click the `Clear Selection` button to remove all currently selected NPCs.
 5. Once you're happy with your replacements, click on the `Replace NPCs` button to perform the replacement.
 6. If you wish to clear your replacements that you have previously applied, click on the `Clear Folder` button. **WARNING: This clears everything in the `mod/chr` folder in ModEngine2. This includes other mods you may have installed. Make sure you actually want to clear all of your character mods before selecting this option.**
-7. The NPCs should now be replaced. Launch your game the normal way you do with ModEngine2 and confirm that everything is working as intended. You will not need to relaunch this mod and perform the replacement steps again unless you want to change the NPCs being replaced.
+7. The NPCs should now be replaced. You can close the mod window and the terminal that was opened to run it. The terminal will close when you press any key. It is kept open in case there were errors that you want to send to me for help.
+8. Launch your game the normal way you do with ModEngine2 and confirm that everything is working as intended. You will not need to relaunch this mod and perform the replacement steps again unless you want to change the NPCs being replaced.
 
 ## Screenshots
 <p style="text-align: center">

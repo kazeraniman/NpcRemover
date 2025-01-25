@@ -25,6 +25,9 @@ venv\Scripts\pip install -r requirements.txt
 echo Dependencies installed.
 
 echo Launching the app...
+rem Change the working directory of the script so the different files can find each other.
+set PYTHONPATH=%~dp0
+
 rem Run the script to launch the app.
 venv\Scripts\python.exe src\main.py
 
