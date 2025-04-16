@@ -7,10 +7,10 @@ The [original mod](https://www.nexusmods.com/eldenring/mods/4392) worked by repl
 ## Installation
 1. Install [ModEngine2](https://github.com/soulsmods/ModEngine2). Follow the instructions on the page.
 2. Install [Python3](https://www.python.org/downloads/). The latest, stable version is the safest choice (it'll be the big download button at the top). I tried not to use too many new features to allow people with older version of Python3 to run the mod, but if you're having problems, I would download the latest version. It is important to note that Python2 and Python3 are completely different, and Python2 is not just and "older version of Python3".
-3. Download the [latest release](https://github.com/kazeraniman/NpcRemover/releases) of this mod. Alternatively, download it on NexusMods (link coming soon).
+3. Download the [latest release](https://github.com/kazeraniman/NpcRemover/releases) of this mod. Alternatively, download it on [NexusMods](https://www.nexusmods.com/eldenring/mods/7763).
 4. Extract the downloaded mod wherever you'd like.
 5. If you downloaded from NexusMods, skip this step as the replacement files will come with it. If you downloaded from GitHub, you need a copy of the replacement files.
-   1. Grab a copy of the replacement files from the [original mod](https://www.nexusmods.com/eldenring/mods/4392?tab=files). Both the original and turtle forms work, but I recommend the turtle files as it decreases teh chance of softlocking the game.
+   1. Grab a copy of the replacement files from the [original mod](https://www.nexusmods.com/eldenring/mods/4392?tab=files). Both the original and turtle forms work, but I recommend the turtle files as it decreases the chance of softlocking the game.
    2. Extract the replacement files into the `res` folder of this mod. There should be no parent folder; the `.dcx` files should all be directly under the `res` folder.
 
 ## Usage
@@ -25,12 +25,19 @@ The [original mod](https://www.nexusmods.com/eldenring/mods/4392) worked by repl
 
 ## Screenshots
 <p style="text-align: center">
+  <img alt="Replacement" src="img/example_replacement.png">
+</p>
+
+<p style="text-align: center">
   <img alt="Main Window" src="img/main.png">
 </p>
 
 <p style="text-align: center">
   <img alt="Selecting Mod Folder" src="img/select_mod_folder.png">
 </p>
+
+## Questions and Comments
+Need help? Want to suggest a feature? Any other comments or questions? Leave an issue on GitHub or a comment on NexusMods and I'll try to help as best as I can.
 
 ## Attribution
 The original idea for this mod and the mod which provides the files to use as replacements is found [here](https://www.nexusmods.com/eldenring/mods/4392) as was uploaded by [Vlobster](https://next.nexusmods.com/profile/Vlobster).  
