@@ -1,6 +1,9 @@
 @echo off
 rem This turns off every command being written out instead of executed immediately.
 
+rem Change to the folder of this file. This gets around running as Administrator putting us in System32. You shouldn't need to run as Administrator except to get around Smart App Control anyway.
+cd /d "%~dp0"
+
 rem Setting up the container to hold all of the python dependencies needed to run the script.
 echo Setting up environment for the dependencies...
 if not exist venv (

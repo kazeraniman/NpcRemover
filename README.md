@@ -4,6 +4,9 @@ An Elden Ring mod which removes any selected NPC.
 ## Concept
 The [original mod](https://www.nexusmods.com/eldenring/mods/4392) worked by replacing the files for a given character using [ModEngine2](https://github.com/soulsmods/ModEngine2). While the original mod works perfectly, it requires the user to find the ID of the NPC they wish to replace and then rename the files to that ID. This adds a bit of friction to the experience. This mod tries to help with this by providing a window which lets you pick the NPCs and then replaces them for you with the click of a button. If you do not wish to run scripts on your computer (despite the fact that the code is provided), I highly encourage checking out the original mod.
 
+## Quickstart
+If you don't want to read, you can just [watch the video](https://youtu.be/7bRu5DdM88E) to get in faster. There are more details below, but the video should give you the most common stuff.
+
 ## Installation
 1. Install [ModEngine2](https://github.com/soulsmods/ModEngine2). Follow the instructions on the page.
 2. Install [Python3](https://www.python.org/downloads/). The latest, stable version is the safest choice (it'll be the big download button at the top). I tried not to use too many new features to allow people with older version of Python3 to run the mod, but if you're having problems, I would download the latest version. It is important to note that Python2 and Python3 are completely different, and Python2 is not just and "older version of Python3".
@@ -38,6 +41,11 @@ The [original mod](https://www.nexusmods.com/eldenring/mods/4392) worked by repl
 
 ## Questions and Comments
 Need help? Want to suggest a feature? Any other comments or questions? Leave an issue on GitHub or a comment on NexusMods and I'll try to help as best as I can.
+
+## FAQ
+> Smart App Control is blocking the mod, what can I do?
+
+Instead of double-clicking [launch_npc_remover.bat](launch_npc_remover.bat), you can try right-clicking it and selecting "Run as administrator". I don't really like recommending this, since this bypasses some Windows security features and if you get into the habit of doing this, you could run into dangerous scenarios down the line. The safer option would be to use [the original mod](https://www.nexusmods.com/eldenring/mods/4392) to manually replace the files to not have to bypass Windows security features.
 
 ## Attribution
 The original idea for this mod and the mod which provides the files to use as replacements is found [here](https://www.nexusmods.com/eldenring/mods/4392) as was uploaded by [Vlobster](https://next.nexusmods.com/profile/Vlobster).  
