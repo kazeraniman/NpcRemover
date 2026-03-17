@@ -251,3 +251,6 @@ fabric.properties
 # NpcRemover
 res/
 !res/ids.json
+
+# IDE
+.idea/
