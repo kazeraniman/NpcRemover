@@ -29,6 +29,8 @@ MOD_FOLDER_SELECT_TITLE_TEXT = 'Select Mod Engine 2 Mod Folder'
 MOD_FOLDER_REQUIRED_NAME = 'mod'
 MOD_FOLDER_REQUIRED_NAME_TITLE = 'Must Select Mod Folder'
 MOD_FOLDER_REQUIRED_NAME_BODY = 'The folder you chose is not called "mod". You must select the "mod" folder from Mod Engine 2.'
+MOD_FOLDER_NOT_SET_TITLE = 'Mod Folder Not Set'
+MOD_FOLDER_NOT_SET_BODY = 'The "mod" folder is not set. Please set the "mod" folder at the top of the window first then try again.'
 REPLACE_NPC_NO_SELECTION_TITLE = 'No NPCs Selected'
 REPLACE_NPC_NO_SELECTION_BODY = 'Select some NPCs and then try again.'
 REPLACE_NPC_CONFIRMATION_TITLE = 'Replace NPCs'
@@ -192,6 +194,10 @@ class MainWindow(QMainWindow):
             self.show_message_box(REPLACE_NPC_NO_SELECTION_TITLE, REPLACE_NPC_NO_SELECTION_BODY)
             return
 
+        if not self.mod_engine_folder_text.text():
+            self.show_message_box(MOD_FOLDER_NOT_SET_TITLE, MOD_FOLDER_NOT_SET_BODY)
+            return
+
         should_replace = self.show_message_box(REPLACE_NPC_CONFIRMATION_TITLE, REPLACE_NPC_CONFIRMATION_BODY, QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.Yes)
         if should_replace != QMessageBox.StandardButton.Yes:
             return
@@ -205,6 +211,10 @@ class MainWindow(QMainWindow):
             self.show_message_box(REPLACE_NPC_ERROR_TITLE, REPLACE_NPC_ERROR_BODY)
 
     def delete_button_clicked(self):
+        if not self.mod_engine_folder_text.text():
+            self.show_message_box(MOD_FOLDER_NOT_SET_TITLE, MOD_FOLDER_NOT_SET_BODY)
+            return
+
         should_clear = self.show_message_box(CLEAR_FOLDER_CONFIRMATION_TITLE, CLEAR_FOLDER_CONFIRMATION_BODY, QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.Yes)
         if should_clear != QMessageBox.StandardButton.Yes:
             return
